@@ -1,29 +1,59 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <carousel-track :carousel="carousel" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "./components/HelloWorld.vue";
+import CarouselTrack from "@/components/CarouselTrack.vue";
+import { Carousel } from "@/types/carousel";
 
 @Component({
   components: {
-    HelloWorld
+    CarouselTrack
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  carousel: Carousel = {
+    slides: [
+      {
+        src:
+          "https://cdn.pixabay.com/photo/2016/01/19/17/48/woman-1149911_1280.jpg"
+      },
+      {
+        src:
+          "https://cdn.pixabay.com/photo/2017/12/30/11/58/sexy-3049894_1280.jpg"
+      },
+      {
+        src:
+          "https://cdn.pixabay.com/photo/2016/01/19/17/51/girls-1149935_1280.jpg"
+      },
+      {
+        src:
+          "https://cdn.pixabay.com/photo/2018/04/21/14/52/portrait-3338642_1280.jpg"
+      },
+      {
+        src:
+          "https://cdn.pixabay.com/photo/2017/11/10/12/53/face-2936245_1280.jpg"
+      },
+      {
+        src:
+          "https://cdn.pixabay.com/photo/2017/02/10/15/11/guy-2055375_1280.jpg"
+      }
+    ],
+    slidesToShow: 2
+  };
+}
 </script>
 
 <style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
 }
 </style>
