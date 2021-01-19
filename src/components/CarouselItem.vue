@@ -2,12 +2,17 @@
   <div
     :class="[
       'carousel__item',
-      { 'carousel__item--active': isActive },
-      { 'carousel__item--next': isNext },
-      { 'carousel__item--prev': isPrev }
+      { 'carousel__item--active': active === index },
+      { 'carousel__item--next': active < index },
+      { 'carousel__item--prev': active > index }
     ]"
   >
-    <img :src="slide.src" />
+    <img
+      v-for="slide in item.slides"
+      :src="slide.src"
+      :key="index + '_' + slide.id"
+      :style="{ width: 100 / item.slides.length + '%' }"
+    />
   </div>
 </template>
 
@@ -19,10 +24,13 @@ import { CarouselSlide } from "@/types/carousel";
   components: {}
 })
 export default class CarouselItem extends Vue {
-  @Prop() slide!: CarouselSlide;
-  @Prop() isActive!: boolean;
-  @Prop() isPrev!: boolean;
-  @Prop() isNext!: boolean;
+  @Prop() item!: { index: number; slides: [CarouselSlide] };
+
+  @Prop() active!: number;
+
+  get index() {
+    return this.item.index;
+  }
 }
 </script>
 
@@ -30,7 +38,9 @@ export default class CarouselItem extends Vue {
 .carousel__item {
   position: absolute;
   top: 0;
-  transition: left 1s linear;
+  transition: left 0.7s linear;
+  height: 100%;
+  width: 100%;
   &--active {
     left: 0;
   }
@@ -39,6 +49,11 @@ export default class CarouselItem extends Vue {
   }
   &--next {
     left: 100%;
+  }
+  img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 }
 </style>

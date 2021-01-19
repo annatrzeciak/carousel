@@ -1,4 +1,5 @@
 export interface CarouselSlide {
+  id: number;
   src: string;
 }
 
