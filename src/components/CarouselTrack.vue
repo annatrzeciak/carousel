@@ -25,7 +25,7 @@ import CarouselItem from "@/components/CarouselItem.vue";
 })
 export default class CarouselTrack extends Vue {
   @Prop() carousel!: Carousel;
-
+  slidesToShow = 3;
   itemsBase: Array<{
     index: number;
     slides: Array<CarouselSlide>;
@@ -51,7 +51,7 @@ export default class CarouselTrack extends Vue {
     if (this.carousel.slides) {
       for (
         let i = 0;
-        i < this.carousel.slides.length / this.carousel.slidesToShow;
+        i < this.carousel.slides.length / this.slidesToShow;
         i++
       ) {
         items.push(this.getNSlide(i));
@@ -61,9 +61,8 @@ export default class CarouselTrack extends Vue {
   }
   getNSlide(n: number) {
     const slides = [];
-    for (let j = 0; j < this.carousel.slidesToShow; j++) {
-      const index =
-        (n * this.carousel.slidesToShow + j) % this.carousel.slides.length;
+    for (let j = 0; j < this.slidesToShow; j++) {
+      const index = (n * this.slidesToShow + j) % this.carousel.slides.length;
 
       if (index < 0) {
         slides.push(this.carousel.slides[this.carousel.slides.length + index]);
@@ -73,7 +72,22 @@ export default class CarouselTrack extends Vue {
     }
     return { index: n, slides };
   }
+  setSlidesToShow() {
+    if (window.innerWidth < 576) {
+      this.slidesToShow = this.carousel.slidesToShowMobile;
+    } else {
+      this.slidesToShow = this.carousel.slidesToShow;
+    }
+    console.log(this.slidesToShow);
+  }
+  beforeMount() {
+    window.addEventListener("resize", () => this.setSlidesToShow());
+  }
+  beforeDestroy() {
+    window.removeEventListener("resize", () => this.setSlidesToShow());
+  }
   created() {
+    this.setSlidesToShow();
     this.itemsBase = this.mapSlidesToCarouselItems();
     this.checkThatExistItemBeforeAndAfter();
   }
@@ -82,6 +96,12 @@ export default class CarouselTrack extends Vue {
 
   @Watch("active")
   async onActiveChange() {
+    this.checkThatExistItemBeforeAndAfter();
+  }
+
+  @Watch("slidesToShow")
+  async onSlidesToShowChange() {
+    this.itemsBase = this.mapSlidesToCarouselItems();
     this.checkThatExistItemBeforeAndAfter();
   }
 

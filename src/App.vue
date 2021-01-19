@@ -48,7 +48,8 @@ export default class App extends Vue {
           "https://cdn.pixabay.com/photo/2017/02/10/15/11/guy-2055375_1280.jpg"
       }
     ],
-    slidesToShow: 4
+    slidesToShow: 2,
+    slidesToShowMobile: 1
   };
 }
 </script>

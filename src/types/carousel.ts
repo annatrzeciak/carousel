@@ -6,4 +6,5 @@ export interface CarouselSlide {
 export interface Carousel {
   slides: Array<CarouselSlide>;
   slidesToShow: number;
+  slidesToShowMobile: number;
 }
