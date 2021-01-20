@@ -87,9 +87,11 @@ export default class CarouselTrack extends Vue {
     this.currentX = e.pageX;
   }
   touchDown(e: TouchEvent) {
-    this.mouseIsDown = true;
-    this.startX = e.touches[0].pageX;
-    this.currentX = e.touches[0].pageX;
+    if (e.touches) {
+      this.mouseIsDown = true;
+      this.startX = e.touches[0].pageX;
+      this.currentX = e.touches[0].pageX;
+    }
   }
   mouseMove(e: MouseEvent) {
     if (this.mouseIsDown) {
@@ -97,7 +99,7 @@ export default class CarouselTrack extends Vue {
     }
   }
   touchMove(e: TouchEvent) {
-    if (this.mouseIsDown) {
+    if (this.mouseIsDown && e.touches) {
       this.currentX = e.touches[0].pageX;
     }
   }
@@ -217,6 +219,9 @@ export default class CarouselTrack extends Vue {
     font-weight: lighter;
     cursor: pointer;
     transition: linear 0.3s;
+    -ms-transition: linear 0.3s;
+    -o-transition: linear 0.3s;
+    -webkit-transition: linear 0.3s;
     &:hover {
       opacity: 0.6;
     }
@@ -282,6 +287,9 @@ export default class CarouselTrack extends Vue {
       height: 36px;
       cursor: pointer;
       transition: linear 0.3s;
+      -o-transition: linear 0.3s;
+      -ms-transition: linear 0.3s;
+      -webkit-transition: linear 0.3s;
       &:hover {
         opacity: 0.6;
       }

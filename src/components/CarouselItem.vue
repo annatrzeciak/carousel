@@ -57,6 +57,9 @@ export default class CarouselItem extends Vue {
   position: absolute;
   top: 0;
   transition: left 0.7s linear;
+  -o-transition: left 0.7s linear;
+  -ms-transition: left 0.7s linear;
+  -webkit-transition: left 0.7s linear;
   height: 100%;
   width: 100%;
   img {
