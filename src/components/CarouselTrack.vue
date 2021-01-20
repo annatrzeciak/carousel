@@ -163,7 +163,6 @@ export default class CarouselTrack extends Vue {
     } else {
       this.slidesToShow = this.carousel.slidesToShow;
     }
-    console.log(this.slidesToShow);
   }
   beforeMount() {
     window.addEventListener("resize", () => this.setSlidesToShow());
