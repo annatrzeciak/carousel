@@ -1,8 +1,9 @@
 <template>
   <div class="carousel" v-if="carousel">
     <button class="carousel__button carousel__button--prev" @click="active--">
-      &lt;
+      &lsaquo;
     </button>
+
     <carousel-item
       v-for="item in items"
       :item="item"
@@ -10,8 +11,23 @@
       :active="active"
     />
     <button class="carousel__button carousel__button--next" @click="active++">
-      &gt;
+      &rsaquo;
     </button>
+    <div class="carousel__labels">
+      <h2 class="carousel__title" v-if="carousel.title">
+        {{ carousel.title }}
+      </h2>
+      <p class="carousel__text" v-if="carousel.text">{{ carousel.text }}</p>
+      <div class="carousel__buttons" v-if="carousel.buttons">
+        <button
+          v-for="(button, i) in carousel.buttons"
+          :key="i"
+          @click="$emit(button.emit)"
+        >
+          {{ button.text }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -124,13 +140,86 @@ export default class CarouselTrack extends Vue {
   overflow: hidden;
   &__button {
     position: absolute;
-    z-index: 1000;
-    top: 50%;
+    z-index: 10;
+    top: calc(50% - 49px);
+    padding: 10px 20px;
+    border: none;
+    font-size: 50px;
+    color: white;
+    background: transparent;
+    font-weight: lighter;
+    cursor: pointer;
+    transition: linear 0.3s;
+    &:hover {
+      opacity: 0.6;
+    }
+    &:focus {
+      outline: none;
+      transform: scale(0.9);
+    }
     &--prev {
       left: 15px;
     }
     &--next {
       right: 15px;
+    }
+    @media (max-width: 576px){
+      display: none;
+    }
+  }
+  &__labels {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  &__title {
+    margin-top: 150px;
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+  &__text {
+    margin-top: 0;
+    margin-bottom: 15px;
+    max-width: 500px;
+    width: 80%;
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+  }
+  &__buttons {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    flex-wrap: wrap;
+    button {
+      padding: 10px 20px;
+      text-transform: uppercase;
+      color: white;
+      background: transparent;
+      border: 1px solid white;
+      margin: 15px 30px;
+      width: 300px;
+      height: 36px;
+      cursor: pointer;
+      transition: linear 0.3s;
+      &:hover {
+        opacity: 0.6;
+      }
+      &:focus {
+        outline: none;
+        transform: scale(0.9);
+      }
     }
   }
 }

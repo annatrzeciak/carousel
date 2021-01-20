@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <carousel-track :carousel="carousel" />
+    <carousel-track
+      :carousel="carousel"
+      @go-to-women-shop="goToWomenShop"
+      @go-to-men-shop="goToMenShop"
+    />
   </div>
 </template>
 
@@ -49,13 +53,29 @@ export default class App extends Vue {
       }
     ],
     slidesToShow: 2,
-    slidesToShowMobile: 1
+    slidesToShowMobile: 1,
+    title: "Spring 2019",
+    text:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam volutpat est sit amet lectus " +
+      "posuere, quis volutpat tellus elementum. Donec tempor justo magna, id malesuada nisl tristique in. ",
+    buttons: [
+      { text: "Shop womens", emit: "go-to-women-shop" },
+      { text: "Shop mens", emit: "go-to-women-shop" }
+    ]
   };
+  goToWomenShop() {
+    alert("goToWomenShop");
+  }
+
+  goToMenShop() {
+    alert("goToMenShop");
+  }
 }
 </script>
 
 <style lang="scss">
 body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
   min-height: 100vh;
