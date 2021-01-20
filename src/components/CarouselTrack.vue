@@ -1,6 +1,18 @@
 <template>
-  <div class="carousel" v-if="carousel">
-    <button class="carousel__button carousel__button--prev" @click="active--">
+  <div
+    class="carousel"
+    v-if="carousel"
+    @mousedown.prevent="mouseDown"
+    v-touch:start="touchDown"
+    @mousemove.prevent="mouseMove"
+    v-touch:moving="touchMove"
+    @mouseup.prevent="mouseUp"
+    v-touch:end="touchUp"
+  >
+    <button
+      class="carousel__button carousel__button--prev"
+      @click.stop="active--"
+    >
       &lsaquo;
     </button>
 
@@ -9,8 +21,12 @@
       :item="item"
       :key="item.index"
       :active="active"
+      :moveX="moveX"
     />
-    <button class="carousel__button carousel__button--next" @click="active++">
+    <button
+      class="carousel__button carousel__button--next"
+      @click.stop="active++"
+    >
       &rsaquo;
     </button>
     <div class="carousel__labels">
@@ -42,6 +58,12 @@ import CarouselItem from "@/components/CarouselItem.vue";
 export default class CarouselTrack extends Vue {
   @Prop() carousel!: Carousel;
   slidesToShow = 3;
+  mouseIsDown = false;
+  startX = 0;
+  currentX = 0;
+  get moveX() {
+    return this.currentX - this.startX;
+  }
   itemsBase: Array<{
     index: number;
     slides: Array<CarouselSlide>;
@@ -58,7 +80,52 @@ export default class CarouselTrack extends Vue {
   get items() {
     return [...this.itemsBefore, ...this.itemsBase, ...this.itemsAfter];
   }
+  mouseDown(e: MouseEvent) {
+    this.mouseIsDown = true;
 
+    this.startX = e.pageX;
+    this.currentX = e.pageX;
+  }
+  touchDown(e: TouchEvent) {
+    this.mouseIsDown = true;
+    this.startX = e.touches[0].pageX;
+    this.currentX = e.touches[0].pageX;
+  }
+  mouseMove(e: MouseEvent) {
+    if (this.mouseIsDown) {
+      this.currentX = e.pageX;
+    }
+  }
+  touchMove(e: TouchEvent) {
+    if (this.mouseIsDown) {
+      this.currentX = e.touches[0].pageX;
+    }
+  }
+  mouseUp(e: MouseEvent) {
+    if (e.view) {
+      if (this.moveX > e.view.innerWidth / 3) {
+        this.active--;
+      } else if (-this.moveX > e.view.innerWidth / 3) {
+        this.active++;
+      }
+    }
+
+    this.currentX = 0;
+    this.startX = 0;
+    this.mouseIsDown = false;
+  }
+  touchUp(e: TouchEvent) {
+    if (e.view) {
+      if (this.moveX > e.view.innerWidth / 3) {
+        this.active--;
+      } else if (-this.moveX > e.view.innerWidth / 3) {
+        this.active++;
+      }
+    }
+    this.currentX = 0;
+    this.startX = 0;
+    this.mouseIsDown = false;
+  }
   mapSlidesToCarouselItems(): Array<{
     index: number;
     slides: Array<CarouselSlide>;
@@ -140,7 +207,7 @@ export default class CarouselTrack extends Vue {
   overflow: hidden;
   &__button {
     position: absolute;
-    z-index: 10;
+    z-index: 1000;
     top: calc(50% - 49px);
     padding: 10px 20px;
     border: none;
@@ -163,11 +230,12 @@ export default class CarouselTrack extends Vue {
     &--next {
       right: 15px;
     }
-    @media (max-width: 576px){
+    @media (max-width: 576px) {
       display: none;
     }
   }
   &__labels {
+    z-index: 1000;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -175,9 +243,10 @@ export default class CarouselTrack extends Vue {
     align-items: center;
   }
   &__title {
+    z-index: 1000;
+
     margin-top: 150px;
     position: relative;
-    z-index: 10;
     text-align: center;
     color: white;
     text-transform: uppercase;
@@ -185,20 +254,20 @@ export default class CarouselTrack extends Vue {
     margin-bottom: 15px;
   }
   &__text {
+    z-index: 1000;
     margin-top: 0;
     margin-bottom: 15px;
     max-width: 500px;
     width: 80%;
     position: relative;
-    z-index: 10;
     text-align: center;
     color: white;
   }
   &__buttons {
+    z-index: 1000;
     width: 80%;
     display: flex;
     justify-content: center;
-    z-index: 10;
     text-align: center;
     color: white;
     flex-wrap: wrap;

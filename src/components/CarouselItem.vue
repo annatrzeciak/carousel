@@ -6,6 +6,7 @@
       { 'carousel__item--next': active < index },
       { 'carousel__item--prev': active > index }
     ]"
+    :style="[{ left }, { 'z-index': zIndex }]"
   >
     <img
       v-for="slide in item.slides"
@@ -25,9 +26,26 @@ import { CarouselSlide } from "@/types/carousel";
 })
 export default class CarouselItem extends Vue {
   @Prop() item!: { index: number; slides: [CarouselSlide] };
+  @Prop() moveX!: number;
 
   @Prop() active!: number;
-
+  get left() {
+    if (this.active > this.index) {
+      return "calc(-100% + " + this.moveX + "px)";
+    } else if (this.active === this.index) {
+      return this.moveX + "px";
+    } else {
+      return "calc(100% + " + this.moveX + "px)";
+    }
+  }
+  get zIndex() {
+    if (this.active < this.index) {
+      return 100 - this.index;
+    } else if (this.active === this.index) {
+      return 100;
+    }
+    return 2;
+  }
   get index() {
     return this.item.index;
   }
@@ -41,15 +59,6 @@ export default class CarouselItem extends Vue {
   transition: left 0.7s linear;
   height: 100%;
   width: 100%;
-  &--active {
-    left: 0;
-  }
-  &--prev {
-    left: -100%;
-  }
-  &--next {
-    left: 100%;
-  }
   img {
     height: 100%;
     object-fit: cover;
